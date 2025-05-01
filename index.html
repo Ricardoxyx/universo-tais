@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Feliz Aniversário Taís</title>
+  <style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: black;
+    height: 100vh;
+  }
+
+  canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  #lua {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 100px;
+    z-index: 2;
+  }
+
+  #mensagem {
+    position: absolute;
+    bottom: 60px;
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: bold;
+    color: #f9c74f;
+    text-shadow: 0 0 10px #f9c74f, 0 0 20px #fff;
+    animation: brilho 2s infinite alternate;
+    z-index: 2;
+  }
+
+  @keyframes brilho {
+    from {
+      text-shadow: 0 0 10px #f9c74f, 0 0 20px #fff;
+    }
+    to {
+      text-shadow: 0 0 20px #f9c74f, 0 0 40px #fff;
+    }
+  }
+</style>
+</head>
+<body>
+  <!-- Lua bonita no topo direito -->
+  <img id="lua" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/240px-FullMoon2010.jpg" alt="Lua" />
+
+  <!-- Frase final -->
+  <div id="mensagem">Feliz Aniversário Taís</div>
+
+  <!-- Estrelas -->
+  <canvas id="universo"></canvas>
+
+  <script>
+    const canvas = document.getElementById('universo');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    const estrelas = [];
+    const maxEstrelas = 200;
+
+    function novaEstrela() {
+      return {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        raio: Math.random() * 1.5 + 0.5,
+        opacidade: 0,
+        velocidade: Math.random() * 0.5 + 0.2,
+      };
+    }
+
+    for (let i = 0; i < maxEstrelas; i++) {
+      estrelas.push(novaEstrela());
+    }
+
+    function animar() {
+      ctx.clearRect(0, 0, width, height);
+      estrelas.forEach((estrela) => {
+        ctx.beginPath();
+        ctx.arc(estrela.x, estrela.y, estrela.raio, 0, 2 * Math.PI);
+        estrela.opacidade += 0.01;
+        if (estrela.opacidade > 1) estrela.opacidade = 1;
+        ctx.fillStyle = `rgba(255, 255, 255, ${estrela.opacidade})`;
+        ctx.fill();
+        estrela.y += estrela.velocidade;
+        if (estrela.y > height) {
+          estrela.y = 0;
+          estrela.x = Math.random() * width;
+          estrela.opacidade = 0;
+        }
+      });
+      requestAnimationFrame(animar);
+    }
+
+    animar();
+
+    window.addEventListener('resize', () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    });
+  </script>
+</body>
+</html>
